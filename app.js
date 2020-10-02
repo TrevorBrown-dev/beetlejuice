@@ -27,8 +27,8 @@ client.on("message", (message) => {
         if(response.data){
             if(!message.author.bot){
                 if(!message.content === "!shit" || !message.content === "!shitpost"){
-                   message.delete();
-                  message.channel.send(`That word is a no go ${message.author}`);
+                    message.delete();
+                    message.channel.send(`That word is a no go ${message.author}`);
                 }
             }
         }
