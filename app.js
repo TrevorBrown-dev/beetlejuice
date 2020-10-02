@@ -1,6 +1,5 @@
 import Discord from "discord.js";
 import axios from "axios";  
-const queue = new Map();
 
 const client = new Discord.Client();
 
