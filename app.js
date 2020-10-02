@@ -26,8 +26,10 @@ client.on("message", (message) => {
     axios.get(`https://www.purgomalum.com/service/containsprofanity?text=${message.content}`).then((response) =>{
         if(response.data){
             if(!message.author.bot){
-                message.delete();
-                message.channel.send(`That word is a no go ${message.author}`);
+                if(!message.content.startsWith("!")){
+                   message.delete();
+                  message.channel.send(`That word is a no go ${message.author}`);
+                }
             }
         }
     })
