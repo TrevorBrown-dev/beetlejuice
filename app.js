@@ -17,8 +17,8 @@ client.once('disconnect', () => {
     console.log('Disconnect!');
 });
 
+let toggle = false;
 client.on("message", (message) => {
-    let toggle = false;
     console.log(toggle);
     let args = message.content.split(" ");
     if(toggle === false && args[0] === '!secret'){
