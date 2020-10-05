@@ -23,8 +23,8 @@ client.on("message", (message) => {
     if(toggle === false && args[0] === '!secret') toggle === true;
     if(toggle === true && args[0] === '!secret') toggle === false;
     const user = message.mentions.members.first();
-    console.log(user);
-    console.log(message.author.id);
+    //console.log(user);
+    //console.log(message.author.id);
     axios.get(`https://www.purgomalum.com/service/containsprofanity?text=${message.content}`).then((response) =>{
         if(response.data){
             if(!message.author.bot){
@@ -32,10 +32,11 @@ client.on("message", (message) => {
                     message.delete();
                     message.channel.send(`That word is a no go ${message.author}`);
                 }
-                //if(message.author.id.includes() && toggle === true){
-                //  message.delete();
-                //  message.channel.send(`That word is a no go ${message.author}`)
-                // }
+                //Intent: To troll trevor 760676060550398002
+                if(message.author.id.includes(219853415184990208) && toggle === true){
+                 message.delete();
+                 message.channel.send(`That word is a no go ${message.author}`)
+                }
             }
         }
     })
