@@ -23,11 +23,11 @@ client.on("message", (message) => {
     let args = message.content.split(" ");
     if(toggle === false && args[0] === '!secret'){
         message.delete();
-        toggle === true;
+        toggle = true;
         console.log(toggle);
     }else if(toggle === true && args[0] === '!secret'){
         message.delete();
-        toggle === false;
+        toggle = false;
         console.log(toggle);
     }    
     const user = message.mentions.members.first();
