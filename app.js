@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import axios from "axios";  
 
 const client = new Discord.Client();
+let toggle = false;
 
 client.once('ready', () => {
     console.log("Ready!");
@@ -17,22 +18,13 @@ client.once('disconnect', () => {
     console.log('Disconnect!');
 });
 
-let toggle = false;
 client.on("message", (message) => {
-    console.log(toggle);
     let args = message.content.split(" ");
-    if(toggle === false && args[0] === '!secret'){
-        message.delete();
-        toggle = true;
-        console.log(toggle);
-    }else if(toggle === true && args[0] === '!secret'){
-        message.delete();
-        toggle = false;
-        console.log(toggle);
-    }    
+    if(toggle === false && args[0] === '!secret')toggle = true;
+    else if(toggle === true && args[0] === '!secret')toggle = false;    
     const user = message.mentions.members.first();
-    //console.log(user);
-    //console.log(message.author.id);
+
+    console.log(message.author.id);
     //Intent: To troll trevor 760676060550398002
     if(message.author.id === 219853415184990208 && toggle === true){
         console.log(working);
