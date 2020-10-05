@@ -18,9 +18,12 @@ client.once('disconnect', () => {
 });
 
 client.on("message", (message) => {
-
+    let toggle = false;
     let args = message.content.split(" ");
+    if(toggle === false && args[0] === '!secret') toggle === true;
+    if(toggle === true && args[0] === '!secret') toggle === false;
     const user = message.mentions.members.first();
+    console.log(user);
     console.log(message.author.id);
     axios.get(`https://www.purgomalum.com/service/containsprofanity?text=${message.content}`).then((response) =>{
         if(response.data){
@@ -29,7 +32,10 @@ client.on("message", (message) => {
                     message.delete();
                     message.channel.send(`That word is a no go ${message.author}`);
                 }
-                //if(message.author.id === )
+                //if(message.author.id.includes() && toggle === true){
+                //  message.delete();
+                //  message.channel.send(`That word is a no go ${message.author}`)
+                // }
             }
         }
     })
