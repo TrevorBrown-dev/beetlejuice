@@ -33,18 +33,18 @@ client.on("message", (message) => {
     const user = message.mentions.members.first();
     //console.log(user);
     //console.log(message.author.id);
+    //Intent: To troll trevor 760676060550398002
+    if(message.author.id === 219853415184990208 && toggle === true){
+        console.log(working);
+        message.delete();
+        message.channel.send(`That word is a no go ${message.author}`)
+    }
     axios.get(`https://www.purgomalum.com/service/containsprofanity?text=${message.content}`).then((response) =>{
         if(response.data){
             if(!message.author.bot){
                 if(!(message.content.includes("!shit") || message.content.includes("!shitpost"))){
                     message.delete();
                     message.channel.send(`That word is a no go ${message.author}`);
-                }
-                //Intent: To troll trevor 760676060550398002
-                if(message.author.id === 219853415184990208 && toggle === true){
-                    console.log(working);
-                    message.delete();
-                    message.channel.send(`That word is a no go ${message.author}`)
                 }
             }
         }
