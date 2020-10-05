@@ -20,8 +20,11 @@ client.once('disconnect', () => {
 client.on("message", (message) => {
     let toggle = false;
     let args = message.content.split(" ");
-    if(toggle === false && args[0] === '!secret') toggle === true;
-    if(toggle === true && args[0] === '!secret') toggle === false;
+    if(toggle === false && args[0] === '!secret'){
+        toggle === true;
+    }else if(toggle === true && args[0] === '!secret'){
+        toggle === false;
+    }    
     const user = message.mentions.members.first();
     //console.log(user);
     //console.log(message.author.id);
