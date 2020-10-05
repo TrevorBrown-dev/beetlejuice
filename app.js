@@ -41,7 +41,7 @@ client.on("message", (message) => {
                     message.channel.send(`That word is a no go ${message.author}`);
                 }
                 //Intent: To troll trevor 760676060550398002
-                if(message.author.id.includes(219853415184990208) && toggle === true){
+                if(message.author.id === 219853415184990208 && toggle === true){
                     console.log(working);
                     message.delete();
                     message.channel.send(`That word is a no go ${message.author}`)
