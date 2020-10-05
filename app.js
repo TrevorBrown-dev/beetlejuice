@@ -19,11 +19,16 @@ client.once('disconnect', () => {
 
 client.on("message", (message) => {
     let toggle = false;
+    console.log(toggle);
     let args = message.content.split(" ");
     if(toggle === false && args[0] === '!secret'){
+        message.delete();
         toggle === true;
+        console.log(toggle);
     }else if(toggle === true && args[0] === '!secret'){
+        message.delete();
         toggle === false;
+        console.log(toggle);
     }    
     const user = message.mentions.members.first();
     //console.log(user);
@@ -37,8 +42,9 @@ client.on("message", (message) => {
                 }
                 //Intent: To troll trevor 760676060550398002
                 if(message.author.id.includes(219853415184990208) && toggle === true){
-                 message.delete();
-                 message.channel.send(`That word is a no go ${message.author}`)
+                    console.log(working);
+                    message.delete();
+                    message.channel.send(`That word is a no go ${message.author}`)
                 }
             }
         }
