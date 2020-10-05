@@ -2,7 +2,6 @@ import Discord from "discord.js";
 import axios from "axios";  
 
 const client = new Discord.Client();
-let toggle = false;
 
 client.once('ready', () => {
     console.log("Ready!");
@@ -19,18 +18,10 @@ client.once('disconnect', () => {
 });
 
 client.on("message", (message) => {
+
     let args = message.content.split(" ");
-    if(toggle === false && args[0] === '!secret')toggle = true;
-    else if(toggle === true && args[0] === '!secret')toggle = false;    
     const user = message.mentions.members.first();
 
-    console.log(message.author.id);
-    //Intent: To troll trevor 760676060550398002
-    if(/*message.author.id === 219853415184990208 &&*/ toggle === true){
-        console.log('working');
-        message.delete();
-        message.channel.send(`That word is a no go ${message.author}`)
-    }
     axios.get(`https://www.purgomalum.com/service/containsprofanity?text=${message.content}`).then((response) =>{
         if(response.data){
             if(!message.author.bot){
