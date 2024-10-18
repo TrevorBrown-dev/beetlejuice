@@ -1,57 +1,91 @@
 use std::collections::HashMap;
 use std::env;
 
+use serenity::all::MessageUpdateEvent;
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 
 struct Handler;
 
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct ProfanityCheck {
-    is_profanity: bool,
-    #[allow(dead_code)]
-    score: f64,
+async fn check_profanity(msg: String) -> Result<bool, String> {
+    let text = format!(
+        "https://www.purgomalum.com/service/containsprofanity?text={}",
+        msg
+    );
+    let response = reqwest::get(text)
+        .await
+        .map_err(|_| "Profanity check api returned bad result.")?
+        .text()
+        .await
+        .map_err(|_| "Could not get text from profanity api call.")?;
+
+    response
+        .parse::<bool>()
+        .map_err(|_| "Could not parse profanity api call response to bool.".to_string())
 }
 
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: serenity::prelude::Context, msg: Message) {
-        let client = reqwest::Client::new();
-        let mut json = HashMap::new();
-        json.insert("message", msg.content.clone());
-        let response = client
-            .post("https://vector.profanity.dev")
-            .json(&json)
-            .send()
-            .await
-            .map_err(|_| "Could not send post request to profanity filter.");
-
-        if let Err(why) = &response {
-            println!("{}", why);
-            return;
-        }
-
-        let response = response.unwrap();
-
-        let response = match response.json::<ProfanityCheck>().await {
-            Ok(check) => check,
+        let is_profane = match check_profanity(msg.content.clone()).await {
+            Ok(is_profane) => is_profane,
             Err(why) => {
-                println!("{}", why);
+                println!("NEW: {}", why);
                 return;
             }
         };
 
-        if response.is_profanity {
+        if is_profane {
             let delete_result = msg.delete(ctx.clone()).await;
             if delete_result.is_err() {
-                println!("Could not delete message. \"{}\"", msg.content.clone());
+                println!("NEW: Could not delete message. \"{}\"", msg.content.clone());
                 return;
             }
             let text = format!("That word is a no go!! {}", msg.author.mention());
             if (msg.channel_id.say(&ctx.http, text).await).is_err() {
-                println!("Could not reply to message. \"{}\"", msg.content.clone());
+                println!(
+                    "NEW: Could not reply to message. \"{}\"",
+                    msg.content.clone()
+                );
+                return;
+            }
+        }
+    }
+
+    async fn message_update(
+        &self,
+        ctx: serenity::prelude::Context,
+        _old_if_available: Option<Message>,
+        _new: Option<Message>,
+        event: MessageUpdateEvent,
+    ) {
+        let mut msg = Message::default();
+        event.apply_to_message(&mut msg);
+
+        let is_profane = match check_profanity(msg.content.clone()).await {
+            Ok(is_profane) => is_profane,
+            Err(why) => {
+                println!("EDIT: {}", why);
+                return;
+            }
+        };
+
+        if is_profane {
+            let delete_result = msg.delete(ctx.clone()).await;
+            if delete_result.is_err() {
+                println!(
+                    "EDIT: Could not delete message. \"{}\"",
+                    msg.content.clone()
+                );
+                return;
+            }
+            let text = format!("That word is a no go!! {}", msg.author.mention());
+            if (msg.channel_id.say(&ctx.http, text).await).is_err() {
+                println!(
+                    "EDIT: Could not reply to message. \"{}\"",
+                    msg.content.clone()
+                );
                 return;
             }
         }
