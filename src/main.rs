@@ -1,17 +1,20 @@
-use std::collections::HashMap;
-use std::env;
-
 use serenity::all::MessageUpdateEvent;
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
+use std::env;
+
+const PROFANITY_LIST_ADDITIONS: [&str; 10] = [
+    "rizz", "skibidi", "ohio", "gyatt", "sigma", "fanum", "bruh", "yeet", "simp", "pomni",
+];
 
 struct Handler;
 
 async fn check_profanity(msg: String) -> Result<bool, String> {
     let text = format!(
-        "https://www.purgomalum.com/service/containsprofanity?text={}",
-        msg
+        "https://www.purgomalum.com/service/containsprofanity?text={}&add={}",
+        msg,
+        PROFANITY_LIST_ADDITIONS.join(",")
     );
     let response = reqwest::get(text)
         .await
