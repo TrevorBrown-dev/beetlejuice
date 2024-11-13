@@ -190,7 +190,7 @@ async fn main() {
 
     // Create a new instance of the Client, logging in as a bot.
     let mut client = Client::builder(&token, intents)
-        .event_handler(Handler)
+        .event_handler(Handler { words_said: vec![] })
         .await
         .expect("Err creating client");
 
