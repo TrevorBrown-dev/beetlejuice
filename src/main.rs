@@ -33,7 +33,7 @@ const ENABLE_FUCK_CHARLIE: bool = false;
 const CHARLIE: &str = "132581846566436864";
 
 const ENABLE_WORD_GAME: bool = true;
-const ENABLE_PROFANITY_CHECK: bool = true;
+const ENABLE_PROFANITY_CHECK: bool = false;
 #[async_trait]
 impl EventHandler for Handler {
     
