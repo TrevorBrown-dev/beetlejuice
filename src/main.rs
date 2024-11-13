@@ -33,11 +33,12 @@ const ENABLE_FUCK_CHARLIE: bool = false;
 const CHARLIE: &str = "132581846566436864";
 
 const ENABLE_WORD_GAME: bool = true;
+const ENABLE_PROFANITY_CHECK: bool = true;
 #[async_trait]
 impl EventHandler for Handler {
     
     async fn message(&self, ctx: serenity::prelude::Context, msg: Message) {
-        {
+        if (ENABLE_PROFANITY_CHECK){
 
             let is_profane = match check_profanity(msg.content.clone()).await {
                 Ok(is_profane) => is_profane,
