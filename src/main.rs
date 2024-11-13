@@ -9,7 +9,6 @@ const PROFANITY_LIST_ADDITIONS: [&str; 9] = [
 ];
 struct Handler {
     words_said: Vec<String>,
-    
 }
 
 async fn check_profanity(msg: String) -> Result<bool, String> {
@@ -36,10 +35,8 @@ const ENABLE_WORD_GAME: bool = true;
 const ENABLE_PROFANITY_CHECK: bool = false;
 #[async_trait]
 impl EventHandler for Handler {
-    
     async fn message(&self, ctx: serenity::prelude::Context, msg: Message) {
-        if (ENABLE_PROFANITY_CHECK){
-
+        if (ENABLE_PROFANITY_CHECK) {
             let is_profane = match check_profanity(msg.content.clone()).await {
                 Ok(is_profane) => is_profane,
                 Err(why) => {
@@ -47,7 +44,7 @@ impl EventHandler for Handler {
                     return;
                 }
             };
-            
+
             if is_profane {
                 let delete_result = msg.delete(ctx.clone()).await;
                 if delete_result.is_err() {
@@ -65,28 +62,29 @@ impl EventHandler for Handler {
             }
         }
 
-            if(ENABLE_FUCK_CHARLIE) {
-                //check if charlie sent the message
-                if msg.author.id.to_string() == CHARLIE {
-                    let delete_result = msg.delete(ctx.clone()).await;
-                    if delete_result.is_err() {
-                        println!("NEW: Could not delete message from Charlie. \"{}\"", msg.content.clone());
-                        return;
-                    }
-                    let text = format!("That word is a no go!! {}", msg.author.mention());
-                    if (msg.channel_id.say(&ctx.http, text).await).is_err() {
-                        println!(
-                            "NEW: Could not reply to Charlie's message. \"{}\"",
-                            msg.content.clone()
-                        );
-                        return;
-                    }
+        if (ENABLE_FUCK_CHARLIE) {
+            //check if charlie sent the message
+            if msg.author.id.to_string() == CHARLIE {
+                let delete_result = msg.delete(ctx.clone()).await;
+                if delete_result.is_err() {
+                    println!(
+                        "NEW: Could not delete message from Charlie. \"{}\"",
+                        msg.content.clone()
+                    );
+                    return;
+                }
+                let text = format!("That word is a no go!! {}", msg.author.mention());
+                if (msg.channel_id.say(&ctx.http, text).await).is_err() {
+                    println!(
+                        "NEW: Could not reply to Charlie's message. \"{}\"",
+                        msg.content.clone()
+                    );
+                    return;
                 }
             }
-        
+        }
 
-
-        if(ENABLE_WORD_GAME) {
+        if (ENABLE_WORD_GAME) {
             let has_been_said = false;
             //split the message into words
             let words = msg.content.split_whitespace();
@@ -109,9 +107,6 @@ impl EventHandler for Handler {
                     return;
                 }
             }
-
-
-           
         }
     }
     async fn channel_update(
