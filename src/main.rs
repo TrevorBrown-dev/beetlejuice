@@ -1,11 +1,11 @@
-use serenity::all::MessageUpdateEvent;
+use serenity::all::{EditChannel, GuildChannel, MessageUpdateEvent};
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 use std::env;
 
-const PROFANITY_LIST_ADDITIONS: [&str; 10] = [
-    "rizz", "skibidi", "ohio", "gyatt", "sigma", "fanum", "bruh", "yeet", "simp", "pomni",
+const PROFANITY_LIST_ADDITIONS: [&str; 9] = [
+    "rizz", "skibidi", "gyatt", "sigma", "fanum", "bruh", "yeet", "simp", "pomni",
 ];
 
 struct Handler;
@@ -52,6 +52,35 @@ impl EventHandler for Handler {
                     msg.content.clone()
                 );
                 return;
+            }
+        }
+    }
+    async fn channel_update(
+        &self,
+        ctx: serenity::prelude::Context,
+        old: Option<GuildChannel>,
+        mut new: GuildChannel,
+    ) {
+        // Check if old channel name was `Ohio`
+        // If so, change it to `Ohio`
+        // If not, do nothing
+        if let Some(old) = old {
+            if old.name.to_lowercase() == "ohio" && new.name.to_lowercase() != "ohio" {
+                let text = format!("{} changed to {}", new.name, "Ohio");
+
+                let builder = EditChannel::new().name("Ohio");
+                if (new.edit(&ctx.http, builder).await).is_err() {
+                    println!("CHANNEL UPDATE: Could not edit channel. \"{}\"", new.name);
+                    return;
+                }
+
+                if (new.id.say(&ctx.http, text).await).is_err() {
+                    println!(
+                        "CHANNEL UPDATE: Could not reply to message. \"{}\"",
+                        new.name
+                    );
+                    return;
+                }
             }
         }
     }
@@ -102,7 +131,8 @@ async fn main() {
     // Set gateway intents, which decides what events the bot will be notified about
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::DIRECT_MESSAGES
-        | GatewayIntents::MESSAGE_CONTENT;
+        | GatewayIntents::MESSAGE_CONTENT
+        | GatewayIntents::GUILDS;
 
     // Create a new instance of the Client, logging in as a bot.
     let mut client = Client::builder(&token, intents)
